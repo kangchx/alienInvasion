@@ -65,30 +65,46 @@ class AlienInvasion:
                 self._check_press_button(mouse_pos)
 
     def _check_press_button(self, mouse_pos):
-        """响应单击Play按钮，开始游戏"""
+        """响应单击按钮"""
         if self.play_button.rect.collidepoint(mouse_pos):
+            #(重新)开始游戏
             if not self.stats.game_active: 
                 self._game_restart()
+            #继续游戏
             elif self.stats.game_pause == True:
                 self.stats.game_pause = False
                 pygame.mouse.set_visible(False)
 
     def _check_keydown_events(self,event):
         """响应键盘按下"""
+        #控制飞船左右行动
         if event.key == pygame.K_RIGHT:
             self.ship.moving_right = True
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
+        #退出游戏
         elif event.key == pygame.K_q:
             sys.exit(0)
+        #发射子弹
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
+        #暂停游戏
         elif event.key == pygame.K_p:
             self.stats.game_pause = True
             pygame.mouse.set_visible(True)
+        #(重新)开始游戏
+        elif event.key == pygame.K_s:
+            if not self.stats.game_active: 
+                self._game_restart()
+        #继续游戏
+        elif event.key == pygame.K_c:
+            if self.stats.game_pause == True:
+                self.stats.game_pause = False
+                pygame.mouse.set_visible(False)
 
     def _check_keyup_events(self,event):
         """响应键盘松开"""
+        #控制飞船左右行动
         if event.key == pygame.K_RIGHT:
             self.ship.moving_right = False
         elif event.key == pygame.K_LEFT:
@@ -164,18 +180,22 @@ class AlienInvasion:
             alien.alien_drop()
         self.settings.fleet_direction *= -1
 
-    def _characters_reborn(self):
-        """重新生成飞船与外星人和用来被显示的飞船编组"""
-
-        #清空余下的外星人和子弹和飞船编组
+    def _characters_empty(self):
+        """清空余下的外星人和子弹和飞船编组"""
         self.aliens.empty()
         self.bullets.empty()
         self.ships.empty()
 
-        #创建外星人和飞船和飞船编组
+    def _characters_create(self):
+        """创建外星人和飞船和飞船编组"""
         self._create_fleet()
         self.ship.ship_reborn()
         self._create_ships_show()
+
+    def _characters_reborn(self):
+        """重新生成飞船与外星人和用来被显示的飞船编组"""
+        self._characters_empty()
+        self._characters_create()
 
     def _game_reborn(self):
         """判断游戏是否继续进行"""
@@ -186,8 +206,10 @@ class AlienInvasion:
             sleep(0.5)
         else:
             #游戏结束
+            self._characters_empty()
             self.stats.game_active = False
             pygame.mouse.set_visible(True)
+            sleep(1)
     
     def _game_restart(self):
         """游戏重新开始"""
@@ -197,6 +219,7 @@ class AlienInvasion:
         self.sb.prep_level()#重置等级
         self.stats.game_active = True
         self._characters_reborn()
+        #self._characters_create()这里用reborn比create容错率更好
         pygame.mouse.set_visible(False)
 
     def _update_screen(self): 

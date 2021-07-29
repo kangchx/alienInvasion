@@ -3,7 +3,6 @@ class Settings:
 
     def __init__(self):
         """初始化游戏的设置"""
-
         #静态设置
 
         #屏幕设置
