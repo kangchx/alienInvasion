@@ -34,13 +34,14 @@ class AlienInvasion:
 
         #创建按钮实例
         self.play_button = Button(self, "Play")
+        self.pause_button = Button(self, "Continue")
 
     def run_game(self):
         """开始游戏的主循环"""
         while True:
             self._check_events()
             
-            if self.stats.game_active:
+            if self.stats.game_active and not self.stats.game_pause:
                 self.ship.update()
                 self._update_bullets()
                 self._check_bullet_alliens_collisions()
@@ -61,13 +62,16 @@ class AlienInvasion:
                 self._check_keyup_events(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                self._check_play_button(mouse_pos)
+                self._check_press_button(mouse_pos)
 
-    def _check_play_button(self, mouse_pos):
+    def _check_press_button(self, mouse_pos):
         """响应单击Play按钮，开始游戏"""
-        if self.play_button.rect.collidepoint(mouse_pos) \
-            and not self.stats.game_active: 
-           self._game_restart() 
+        if self.play_button.rect.collidepoint(mouse_pos):
+            if not self.stats.game_active: 
+                self._game_restart()
+            elif self.stats.game_pause == True:
+                self.stats.game_pause = False
+                pygame.mouse.set_visible(False)
 
     def _check_keydown_events(self,event):
         """响应键盘按下"""
@@ -79,6 +83,9 @@ class AlienInvasion:
             sys.exit(0)
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
+        elif event.key == pygame.K_p:
+            self.stats.game_pause = True
+            pygame.mouse.set_visible(True)
 
     def _check_keyup_events(self,event):
         """响应键盘松开"""
@@ -204,6 +211,8 @@ class AlienInvasion:
 
         if not self.stats.game_active:
             self.play_button.draw_button()
+        elif self.stats.game_pause:
+            self.pause_button.draw_button()
 
         pygame.display.flip()#更新屏幕
 

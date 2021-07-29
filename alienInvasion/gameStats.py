@@ -8,6 +8,7 @@ class GameStats:
         
         #游戏刚启动时处于非活动状态
         self.game_active = False
+        self.game_pause = False
         
         #任何情况下都不能重置最高分为0
         self.high_score = 0
