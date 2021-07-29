@@ -125,7 +125,7 @@ class AlienInvasion:
 
             #提高等级
             self.stats.level += 1
-            self.sb.prep_high_score()
+            self.sb.prep_level()
 
     def _update_aliens(self):
         """更新外星人群中所有外星人的位置"""
