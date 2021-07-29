@@ -9,6 +9,7 @@ from bullet import Bullet
 from alien import Alien
 from button import Button
 from scoreBoard import ScoreBoard
+from screenStart import ScreenStart
 
 class AlienInvasion:
     """管理游戏资源和行为的类"""
@@ -38,6 +39,11 @@ class AlienInvasion:
 
     def run_game(self):
         """开始游戏的主循环"""
+        screen_start = ScreenStart(self)
+        self.screen.fill(self.settings.bg_color)
+        screen_start.screen_start_draw()
+        pygame.display.flip()
+        sleep(10)
         while True:
             self._check_events()
             

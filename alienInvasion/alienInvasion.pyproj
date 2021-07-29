@@ -38,6 +38,9 @@
     <Compile Include="scoreBoard.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="screenStart.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="settings.py">
       <SubType>Code</SubType>
     </Compile>
