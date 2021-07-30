@@ -37,13 +37,21 @@ class AlienInvasion:
         self.play_button = Button(self, "Play")
         self.pause_button = Button(self, "Continue")
 
-    def run_game(self):
-        """开始游戏的主循环"""
+    def run(self):
+        """开始进程"""
+        self._run_start_screen()
+        self._run_game()
+
+    def _run_start_screen(self):
+        """开始初始界面循环"""
         screen_start = ScreenStart(self)
-        self.screen.fill(self.settings.bg_color)
-        screen_start.screen_start_draw()
-        pygame.display.flip()
-        sleep(10)
+        while not self._check_start_screen_events():
+            self.screen.fill(self.settings.bg_color)
+            screen_start.screen_start_draw()
+            pygame.display.flip()
+
+    def _run_game(self):
+        """开始游戏的主循环"""
         while True:
             self._check_events()
             
@@ -56,6 +64,17 @@ class AlienInvasion:
                 self._check_aliens_bottom()
 
             self._update_screen()
+
+    def _check_start_screen_events(self):
+        """响应开始界面事件"""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit(0)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    sys.exit(0)
+                else:
+                    return True
 
     def _check_events(self):
         """响应按键和鼠标事件"""
@@ -286,4 +305,4 @@ class AlienInvasion:
 if __name__ == '__main__':
     #创建游戏实例并运行游戏。
     ai = AlienInvasion()
-    ai.run_game()
+    ai.run()
